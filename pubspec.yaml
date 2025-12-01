@@ -2,8 +2,15 @@ name: cufs
 description: A CLI tool to generate the Ultimate Flutter Stack.
 version: 1.0.0
 # publish_to: 'none' # Remove this line to publish to pub.dev
-homepage: https://github.com/yourusername/create_ultimate_flutter_stack
-repository: https://github.com/yourusername/create_ultimate_flutter_stack
+homepage: https://github.com/vivekvsingh19/create_ultimate_flutter_stack
+repository: https://github.com/vivekvsingh19/create_ultimate_flutter_stack
+
+topics:
+  - cli
+  - flutter
+  - generator
+  - template
+  - productivity
 
 
 environment:

@@ -23,7 +23,7 @@ Thank you for your interest in contributing to CUFS (Create Ultimate Flutter Sta
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/create_ultimate_flutter_stack.git
+git clone https://github.com/vivekvsingh19/create_ultimate_flutter_stack.git
 cd create_ultimate_flutter_stack
 
 # Install dependencies
