@@ -80,6 +80,7 @@ Future<void> _createApp(String appName, {String? testConfig}) async {
         router: json['router'] as String,
         theme: json['theme'] as String,
         screens: (json['screens'] as List).cast<String>(),
+        initializeGit: json['initializeGit'] as bool? ?? false,
       );
       logger.info('🤖 Using test configuration.');
     } catch (e) {
@@ -97,6 +98,7 @@ Future<void> _createApp(String appName, {String? testConfig}) async {
   logger.info('   Router: ${config.router}');
   logger.info('   Theme: ${config.theme}');
   logger.info('   Screens: ${config.screens.join(', ')}');
+  logger.info('   Initialize Git: ${config.initializeGit ? "Yes" : "No"}');
   logger.info('');
 
   final generator = ProjectGenerator(

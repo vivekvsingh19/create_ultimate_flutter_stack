@@ -6,6 +6,7 @@ class ProjectConfig {
   final String router;
   final String theme;
   final List<String> screens;
+  final bool initializeGit;
 
   ProjectConfig({
     required this.stateManagement,
@@ -13,6 +14,7 @@ class ProjectConfig {
     required this.router,
     required this.theme,
     required this.screens,
+    required this.initializeGit,
   });
 }
 
@@ -83,11 +85,18 @@ ProjectConfig askQuestions() {
   ).interact();
   final screens = screenIndices.map((index) => screenOptions[index]).toList();
 
+  // 6. Initialize Git Repo?
+  final initializeGit = Confirm(
+    prompt: 'Initialize git repository?',
+    defaultValue: true,
+  ).interact();
+
   return ProjectConfig(
     stateManagement: stateManagement,
     backend: backend,
     router: router,
     theme: theme,
     screens: screens,
+    initializeGit: initializeGit,
   );
 }

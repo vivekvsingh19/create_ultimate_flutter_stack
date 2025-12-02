@@ -3,6 +3,7 @@ import 'package:path/path.dart' as p;
 import 'package:mason_logger/mason_logger.dart';
 import '../cli/questions.dart';
 import '../utils/file_utils.dart';
+import '../utils/project_structure.dart';
 import '../templates/pubspec_template.dart';
 import '../templates/main_file.dart';
 import '../templates/app_file.dart';
@@ -10,6 +11,7 @@ import '../templates/theme_templates.dart';
 import '../templates/screen_templates.dart';
 import '../templates/widget_templates.dart';
 import '../templates/backend_templates.dart';
+import '../templates/router_templates.dart';
 
 class ProjectGenerator {
   final String appName;
@@ -36,6 +38,23 @@ class ProjectGenerator {
       return;
     }
     progress.complete('Flutter project created.');
+
+    // 1.5 Initialize Git (or remove it)
+    if (config.initializeGit) {
+      final gitDir = Directory(p.join(appName, '.git'));
+      if (!await gitDir.exists()) {
+        progress = logger.progress('Initializing git repository...');
+        await Process.run('git', ['init'], workingDirectory: appName);
+        progress.complete('Git repository initialized.');
+      }
+    } else {
+      final gitDir = Directory(p.join(appName, '.git'));
+      if (await gitDir.exists()) {
+        progress = logger.progress('Removing .git directory...');
+        await gitDir.delete(recursive: true);
+        progress.complete('.git directory removed.');
+      }
+    }
 
     // Delete broken widget_test.dart
     final widgetTest = File(p.join(appName, 'test/widget_test.dart'));
@@ -97,26 +116,7 @@ class ProjectGenerator {
   }
 
   Future<void> _createFolders(String basePath) async {
-    final folders = [
-      'lib/core/config',
-      'lib/core/themes',
-      'lib/core/services',
-      'lib/core/utils',
-      'lib/data/models',
-      'lib/data/repositories',
-      'lib/presentation/screens',
-      'lib/presentation/widgets',
-      'lib/routes',
-    ];
-
-    if (config.stateManagement == 'GetX') {
-      folders.add('lib/presentation/controllers');
-    } else if (config.stateManagement == 'Provider' ||
-        config.stateManagement == 'Riverpod') {
-      folders.add('lib/presentation/providers');
-    } else if (config.stateManagement == 'Bloc') {
-      folders.add('lib/presentation/blocs');
-    }
+    final folders = ProjectStructure.getFolders(config);
 
     for (final folder in folders) {
       await FileUtils.createDirectory(p.join(basePath, folder));
@@ -146,12 +146,12 @@ class ProjectGenerator {
     if (config.router == 'GoRouter') {
       await FileUtils.writeFile(
         p.join(basePath, 'lib/routes/app_router.dart'),
-        _generateGoRouter(),
+        RouterTemplates.generateGoRouter(config),
       );
     } else if (config.router == 'GetX Routing') {
       await FileUtils.writeFile(
         p.join(basePath, 'lib/routes/app_pages.dart'),
-        _generateGetXPages(),
+        RouterTemplates.generateGetXPages(config),
       );
     }
   }
@@ -227,157 +227,5 @@ class ProjectGenerator {
         databaseService,
       );
     }
-  }
-
-  String _generateGoRouter() {
-    final routes = StringBuffer();
-    final imports = StringBuffer();
-
-    imports.writeln("import 'package:go_router/go_router.dart';");
-    if (!config.screens.contains('Home')) {
-      imports.writeln("import 'package:flutter/material.dart';");
-    }
-
-    String initialLocation = '/';
-
-    if (config.screens.contains('Splash')) {
-      imports.writeln("import '../presentation/screens/splash_screen.dart';");
-      routes.writeln('''
-    GoRoute(
-      path: '/splash',
-      builder: (context, state) => const SplashScreen(),
-    ),''');
-      initialLocation = '/splash';
-    }
-
-    if (config.screens.contains('Login / Signup')) {
-      imports.writeln("import '../presentation/screens/login_screen.dart';");
-      routes.writeln('''
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginScreen(),
-    ),''');
-    }
-
-    if (config.screens.contains('Home')) {
-      imports.writeln("import '../presentation/screens/home_screen.dart';");
-      routes.writeln('''
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const HomeScreen(),
-    ),''');
-    } else {
-      // Fallback home if not selected
-      routes.writeln('''
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const Scaffold(body: Center(child: Text('Home'))),
-    ),''');
-    }
-
-    if (config.screens.contains('Profile')) {
-      imports.writeln("import '../presentation/screens/profile_screen.dart';");
-      routes.writeln('''
-    GoRoute(
-      path: '/profile',
-      builder: (context, state) => const ProfileScreen(),
-    ),''');
-    }
-
-    if (config.screens.contains('Settings')) {
-      imports.writeln("import '../presentation/screens/settings_screen.dart';");
-      routes.writeln('''
-    GoRoute(
-      path: '/settings',
-      builder: (context, state) => const SettingsScreen(),
-    ),''');
-    }
-
-    return '''
-${imports.toString()}
-
-final router = GoRouter(
-  initialLocation: '$initialLocation',
-  routes: [
-${routes.toString()}
-  ],
-);
-''';
-  }
-
-  String _generateGetXPages() {
-    final pages = StringBuffer();
-    final imports = StringBuffer();
-
-    imports.writeln("import 'package:get/get.dart';");
-    if (!config.screens.contains('Home')) {
-      imports.writeln("import 'package:flutter/material.dart';");
-    }
-
-    String initialRoute = '/';
-
-    if (config.screens.contains('Splash')) {
-      imports.writeln("import '../presentation/screens/splash_screen.dart';");
-      pages.writeln('''
-    GetPage(
-      name: '/splash',
-      page: () => const SplashScreen(),
-    ),''');
-      initialRoute = '/splash';
-    }
-
-    if (config.screens.contains('Login / Signup')) {
-      imports.writeln("import '../presentation/screens/login_screen.dart';");
-      pages.writeln('''
-    GetPage(
-      name: '/login',
-      page: () => const LoginScreen(),
-    ),''');
-    }
-
-    if (config.screens.contains('Home')) {
-      imports.writeln("import '../presentation/screens/home_screen.dart';");
-      pages.writeln('''
-    GetPage(
-      name: '/',
-      page: () => const HomeScreen(),
-    ),''');
-    } else {
-      pages.writeln('''
-    GetPage(
-      name: '/',
-      page: () => const Scaffold(body: Center(child: Text('Home'))),
-    ),''');
-    }
-
-    if (config.screens.contains('Profile')) {
-      imports.writeln("import '../presentation/screens/profile_screen.dart';");
-      pages.writeln('''
-    GetPage(
-      name: '/profile',
-      page: () => const ProfileScreen(),
-    ),''');
-    }
-
-    if (config.screens.contains('Settings')) {
-      imports.writeln("import '../presentation/screens/settings_screen.dart';");
-      pages.writeln('''
-    GetPage(
-      name: '/settings',
-      page: () => const SettingsScreen(),
-    ),''');
-    }
-
-    return '''
-${imports.toString()}
-
-class AppPages {
-  static const initial = '$initialRoute';
-
-  static final routes = [
-${pages.toString()}
-  ];
-}
-''';
   }
 }
