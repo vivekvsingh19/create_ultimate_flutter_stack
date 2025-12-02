@@ -39,7 +39,7 @@ cufs create my_app
 ```
 
 ### Method 2: Standalone Binary (No Dart SDK required)
-Download the latest release for your OS from the [Releases](https://github.com/yourusername/create_ultimate_flutter_stack/releases) page.
+Download the latest release for your OS from the [Releases](https://github.com/vivekvsingh19/create_ultimate_flutter_stack/releases) page.
 
 ```bash
 # Make executable (Linux/Mac)
@@ -252,5 +252,4 @@ This project is open source and available under the MIT License.
 **Happy Coding! 🚀**
 
 Built with ❤️ for the Flutter community
-# create_ultimate_flutter_stack
 # create_ultimate_flutter_stack
