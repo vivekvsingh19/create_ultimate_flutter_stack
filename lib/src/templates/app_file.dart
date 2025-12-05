@@ -8,8 +8,13 @@ String generateAppDart(ProjectConfig config) {
 
   if (config.router == 'GoRouter') {
     imports.writeln("import '../routes/app_router.dart';");
-  } else if (config.stateManagement == 'GetX') {
+  }
+
+  if (config.stateManagement == 'GetX' || config.router == 'GetX Routing') {
     imports.writeln("import 'package:get/get.dart';");
+  }
+
+  if (config.router == 'GetX Routing') {
     imports.writeln("import '../routes/app_pages.dart';");
   }
 
@@ -17,7 +22,7 @@ String generateAppDart(ProjectConfig config) {
   imports.writeln("import '../core/themes/app_theme.dart';");
 
   String materialApp = 'MaterialApp';
-  if (config.stateManagement == 'GetX') {
+  if (config.stateManagement == 'GetX' || config.router == 'GetX Routing') {
     materialApp = 'GetMaterialApp';
   }
 
@@ -31,11 +36,19 @@ String generateAppDart(ProjectConfig config) {
   buildBody.writeln('      darkTheme: AppTheme.darkTheme,');
   buildBody.writeln('      themeMode: ThemeMode.system,');
 
-  if (config.stateManagement == 'GetX' && config.router == 'GetX Routing') {
+  if (config.router == 'GetX Routing') {
     buildBody.writeln('      initialRoute: AppPages.initial,');
     buildBody.writeln('      getPages: AppPages.routes,');
   } else if (config.router == 'GoRouter') {
-    buildBody.writeln('      routerConfig: router,');
+    if (materialApp.startsWith('GetMaterialApp')) {
+      buildBody.writeln(
+          '      routeInformationParser: router.routeInformationParser,');
+      buildBody.writeln('      routerDelegate: router.routerDelegate,');
+      buildBody.writeln(
+          '      routeInformationProvider: router.routeInformationProvider,');
+    } else {
+      buildBody.writeln('      routerConfig: router,');
+    }
   } else {
     // Default Navigator
     buildBody.writeln(

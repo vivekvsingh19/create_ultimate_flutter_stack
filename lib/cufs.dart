@@ -4,6 +4,8 @@ import 'package:args/args.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:cufs/src/cli/questions.dart';
 import 'package:cufs/src/core/generator.dart';
+import 'package:cufs/src/utils/file_utils.dart';
+import 'package:cufs/src/utils/process_runner.dart';
 
 final logger = Logger();
 
@@ -105,6 +107,8 @@ Future<void> _createApp(String appName, {String? testConfig}) async {
     appName: appName,
     config: config,
     logger: logger,
+    processRunner: ProcessRunnerImpl(),
+    fileUtils: FileUtilsImpl(),
   );
 
   await generator.generate();
@@ -124,21 +128,28 @@ void _printBanner() {
   print(
       '$cyan║$reset                                                                   $cyan║$reset');
   print(
-      '$cyan║$reset               ${pink}█████╗$reset  ${purple}██╗$reset   ${purple}██╗$reset ${blue}███████╗$reset ${cyan}███████╗$reset                 $cyan║$reset');
+      '$cyan║$reset               $pink█████╗$reset  $purple██╗$reset   $purple██╗$reset $blue███████╗$reset $cyan███████╗$reset                 $cyan║$reset');
+
   print(
-      '$cyan║$reset              ${pink}██╔══██╗$reset ${purple}██║$reset   ${purple}██║$reset ${blue}██╔════╝$reset ${cyan}██╔════╝$reset                 $cyan║$reset');
+      '$cyan║$reset              $pink██╔══██╗$reset $purple██║$reset   $purple██║$reset $blue██╔════╝$reset $cyan██╔════╝$reset                 $cyan║$reset');
+
   print(
-      '$cyan║$reset              ${pink}██║$reset  ${pink}╚═╝$reset ${purple}██║$reset   ${purple}██║$reset ${blue}█████╗$reset   ${cyan}███████╗$reset                 $cyan║$reset');
+      '$cyan║$reset              $pink██║$reset  $pink╚═╝$reset $purple██║$reset   $purple██║$reset $blue█████╗$reset   $cyan███████╗$reset                 $cyan║$reset');
+
   print(
-      '$cyan║$reset              ${pink}██║$reset  ${pink}██╗$reset ${purple}██║$reset   ${purple}██║$reset ${blue}██╔══╝$reset   ${cyan}╚════██║$reset                 $cyan║$reset');
+      '$cyan║$reset              $pink██║$reset  $pink██╗$reset $purple██║$reset   $purple██║$reset $blue██╔══╝$reset   $cyan╚════██║$reset                 $cyan║$reset');
+
   print(
-      '$cyan║$reset              ${pink}╚█████╔╝$reset ${purple}╚██████╔╝$reset ${blue}██║$reset      ${cyan}███████║$reset                 $cyan║$reset');
+      '$cyan║$reset              $pink╚█████╔╝$reset $purple╚██████╔╝$reset $blue██║$reset      $cyan███████║$reset                 $cyan║$reset');
+
   print(
-      '$cyan║$reset               ${pink}╚════╝$reset   ${purple}╚═════╝$reset  ${blue}╚═╝$reset      ${cyan}╚══════╝$reset                 $cyan║$reset');
+      '$cyan║$reset               $pink╚════╝$reset   $purple╚═════╝$reset  $blue╚═╝$reset      $cyan╚══════╝$reset                 $cyan║$reset');
+
   print(
       '$cyan║$reset                                                                   $cyan║$reset');
   print(
       '$cyan║$reset                 ${pink}C${purple}r${blue}e${cyan}a${pink}t${purple}e$reset ${blue}U${cyan}l${pink}t${purple}i${blue}m${cyan}a${pink}t${purple}e$reset ${blue}F${cyan}l${pink}u${purple}t${blue}t${cyan}e${pink}r$reset ${purple}S${blue}t${cyan}a${pink}c${purple}k$reset                     $cyan║$reset');
+
   print(
       '$cyan║$reset                                                                   $cyan║$reset');
   print(

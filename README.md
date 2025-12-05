@@ -38,7 +38,18 @@ dart pub global activate cufs
 cufs create my_app
 ```
 
-### Method 2: Standalone Binary (No Dart SDK required)
+### Method 2: Via Git (Latest Version)
+If the package is not yet available on pub.dev or you want the latest changes:
+
+```bash
+# Install from git
+dart pub global activate --source git https://github.com/vivekvsingh19/create_ultimate_flutter_stack.git
+
+# Run
+cufs create my_app
+```
+
+### Method 3: Standalone Binary (No Dart SDK required)
 Download the latest release for your OS from the [Releases](https://github.com/vivekvsingh19/create_ultimate_flutter_stack/releases) page.
 
 ```bash
@@ -246,6 +257,28 @@ This project is open source and available under the MIT License.
 - **Custom Modifications**: All generated code is yours to modify
 - **Clean Code**: Generated projects follow industry best practices
 - **Production Ready**: Code is analysis-clean and null-safe
+
+---
+
+## ❓ Troubleshooting
+
+### "cufs: command not found"
+If you see this error after installation, make sure the Dart system cache is in your PATH.
+
+**Windows:**
+1. Add `%LOCALAPPDATA%\Pub\Cache\bin` to your PATH environment variable.
+   - This is usually: `C:\Users\<YourUsername>\AppData\Local\Pub\Cache\bin`
+2. **Restart your terminal** (or VS Code) for the changes to take effect.
+
+**Linux/Mac:**
+Add `$HOME/.pub-cache/bin` to your PATH.
+```bash
+export PATH="$PATH":"$HOME/.pub-cache/bin"
+```
+
+### "git is not recognized"
+This tool requires Git to be installed and available in your PATH to initialize repositories.
+- [Download Git](https://git-scm.com/downloads)
 
 ---
 
