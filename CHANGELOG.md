@@ -5,6 +5,18 @@ All notable changes to the CUFS (Create Ultimate Flutter Stack) CLI tool will be
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-12-06
+### Fixed
+- 🐛 Fixed issue where full path was used as package name in `pubspec.yaml`.
+- 🐛 Fixed GetX Routing imports and `GetMaterialApp` logic.
+- 🐛 Fixed `GoRouter` compatibility with `GetMaterialApp`.
+- 📝 Improved Windows troubleshooting instructions in README.
+
+### Improved
+- 📈 Optimized pub.dev score:
+  - Updated dependencies (`mason_logger`, `lints`).
+  - Added `example/` directory.
+
 ## [1.0.0] - 2025-12-01
 
 ### Added
