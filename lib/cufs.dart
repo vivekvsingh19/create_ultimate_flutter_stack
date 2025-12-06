@@ -38,7 +38,7 @@ void run(List<String> arguments) async {
   }
 
   if (argResults['version'] as bool) {
-    logger.info('cufs version 1.0.0');
+    logger.info('cufs version 1.0.1');
     exit(0);
   }
 
