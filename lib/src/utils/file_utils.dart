@@ -5,6 +5,7 @@ abstract class FileUtils {
   Future<void> createDirectory(String path);
   Future<void> writeFile(String path, String content);
   Future<bool> exists(String path);
+  Future<String> readFile(String path);
   Future<void> delete(String path, {bool recursive = false});
 }
 
@@ -16,6 +17,12 @@ class FileUtilsImpl implements FileUtils {
     if (!await directory.exists()) {
       await directory.create(recursive: true);
     }
+  }
+
+  @override
+  Future<String> readFile(String path) async {
+    final file = File(path);
+    return await file.readAsString();
   }
 
   @override

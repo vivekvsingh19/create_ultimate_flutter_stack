@@ -99,6 +99,11 @@ class ProjectGenerator {
       progress.complete();
     }
 
+    // 7.5 Update Android Build Configuration
+    progress = logger.progress('Updating Android build configuration...');
+    await _updateAndroidBuildConfiguration(appName);
+    progress.complete();
+
     // 8. Run pub get
     progress = logger.progress('Running flutter pub get...');
     final pubGetResult = await processRunner.run(
@@ -230,6 +235,42 @@ class ProjectGenerator {
         p.join(basePath, 'lib/core/services/database_service.dart'),
         databaseService,
       );
+    }
+  }
+
+  Future<void> _updateAndroidBuildConfiguration(String basePath) async {
+    // 1. Update android/build.gradle (Kotlin version)
+    final buildGradlePath = p.join(basePath, 'android/build.gradle');
+    if (await fileUtils.exists(buildGradlePath)) {
+      var content = await fileUtils.readFile(buildGradlePath);
+      // Update Kotlin version to 1.9.0
+      content = content.replaceAll(
+        RegExp(r"ext\.kotlin_version = '.*'"),
+        "ext.kotlin_version = '1.9.0'",
+      );
+      await fileUtils.writeFile(buildGradlePath, content);
+    }
+
+    // 2. Update android/app/build.gradle (SDK versions)
+    final appBuildGradlePath = p.join(basePath, 'android/app/build.gradle');
+    if (await fileUtils.exists(appBuildGradlePath)) {
+      var content = await fileUtils.readFile(appBuildGradlePath);
+      // Update compileSdkVersion to 34
+      content = content.replaceAll(
+        RegExp(r'compileSdkVersion .*'),
+        'compileSdkVersion 34',
+      );
+      // Update minSdkVersion to 23 (Flutter default is often lower, 23 is safer for modern plugins)
+      content = content.replaceAll(
+        RegExp(r'minSdkVersion .*'),
+        'minSdkVersion 23',
+      );
+      // Update targetSdkVersion to 34
+      content = content.replaceAll(
+        RegExp(r'targetSdkVersion .*'),
+        'targetSdkVersion 34',
+      );
+      await fileUtils.writeFile(appBuildGradlePath, content);
     }
   }
 }
