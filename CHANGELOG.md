@@ -5,6 +5,10 @@ All notable changes to the CUFS (Create Ultimate Flutter Stack) CLI tool will be
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2025-12-06
+### Fixed
+- 🐛 Fixed `Firebase.initializeApp()` not being called in generated `main.dart`.
+
 ## [1.0.3] - 2025-12-06
 ### Fixed
 - 🐛 Updated Android build configuration:

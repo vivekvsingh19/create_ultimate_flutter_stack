@@ -8,7 +8,7 @@ String generateMainDart(ProjectConfig config) {
   imports.writeln("import 'package:flutter/material.dart';");
 
   if (config.backend == 'Firebase') {
-    imports.writeln("// import 'package:firebase_core/firebase_core.dart';");
+    imports.writeln("import 'package:firebase_core/firebase_core.dart';");
     // imports.writeln("import 'firebase_options.dart';"); // Assuming generated
   } else if (config.backend == 'Supabase') {
     imports
@@ -25,7 +25,7 @@ String generateMainDart(ProjectConfig config) {
   mainBody.writeln('  WidgetsFlutterBinding.ensureInitialized();');
 
   if (config.backend == 'Firebase') {
-    mainBody.writeln('  // await Firebase.initializeApp();');
+    mainBody.writeln('  await Firebase.initializeApp();');
     mainBody.writeln('  // options: DefaultFirebaseOptions.currentPlatform,');
   } else if (config.backend == 'Supabase') {
     mainBody.writeln(
